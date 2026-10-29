@@ -1,0 +1,13 @@
+# Only needed if the project directory itself (instead of public/) is the document root,
+# e.g. on shared hosting. Every request is routed into public/, so config files, src/ and var/
+# are never served directly. Requires mod_rewrite.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^$ public/ [L]
+    RewriteRule ^((?!public/).*)$ public/$1 [L]
+</IfModule>
+
+# Without mod_rewrite: deny everything instead of exposing the configuration
+<IfModule !mod_rewrite.c>
+    Require all denied
+</IfModule>

@@ -1,0 +1,6 @@
+# Always use LF line endings, also on Windows checkouts – the files run on Linux (Docker, cron, nginx)
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary

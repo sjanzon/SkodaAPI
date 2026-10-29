@@ -1,0 +1,30 @@
+# Lokale Konfiguration mit API-Key, VIN und S-PIN
+config.local.php
+.env
+.env.*
+!.env.example
+
+# Laufzeitdaten (Cache mit Fahrzeugdaten, Logs)
+var/
+*.log
+
+# Composer (falls später genutzt)
+vendor/
+
+# PhpStorm / JetBrains – benutzerspezifische Dateien
+.idea/workspace.xml
+.idea/usage.statistics.xml
+.idea/shelf/
+.idea/tasks.xml
+.idea/dictionaries/
+.idea/httpRequests/
+.idea/dataSources/
+.idea/dataSources.local.xml
+.idea/sqldialects.xml
+.idea/copilot/
+.idea/**/aws.xml
+
+# Betriebssystem
+.DS_Store
+Thumbs.db
+desktop.ini

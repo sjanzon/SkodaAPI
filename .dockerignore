@@ -1,0 +1,11 @@
+.git
+.idea
+.env
+.env.*
+!.env.example
+config.local.php
+var
+vendor
+*.log
+docker-compose.yml
+Dockerfile

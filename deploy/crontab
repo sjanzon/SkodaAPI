@@ -1,0 +1,3 @@
+# /etc/cron.d/skoda – runs every minute; bin/fetch.php itself decides whether the configured
+# fetch_interval has elapsed. Run it as the web server user so var/ stays writable for both.
+* * * * * www-data php /var/www/skoda/bin/fetch.php >> /var/www/skoda/var/fetch.log 2>&1

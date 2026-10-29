@@ -1,0 +1,56 @@
+# Configuration via .env (see .env.example) or a mounted config.local.php.
+#
+#   docker compose up -d                     web + worker with SQLite
+#   docker compose --profile mysql up -d     additionally start a MySQL container (set DB_DRIVER=mysql)
+
+x-app: &app
+  build: .
+  image: skoda-api:latest
+  restart: unless-stopped
+  environment:
+    SKODA_API_KEY: ${SKODA_API_KEY:-}
+    SKODA_VIN: ${SKODA_VIN:-}
+    SKODA_SPIN: ${SKODA_SPIN:-}
+    SKODA_COMMANDS_ENABLED: ${SKODA_COMMANDS_ENABLED:-false}
+    SKODA_TIMEZONE: ${SKODA_TIMEZONE:-Europe/Berlin}
+    SKODA_FETCH_INTERVAL: ${SKODA_FETCH_INTERVAL:-600}
+    SKODA_HISTORY_RETENTION_DAYS: ${SKODA_HISTORY_RETENTION_DAYS:-0}
+    DB_DRIVER: ${DB_DRIVER:-sqlite}
+    DB_HOST: ${DB_HOST:-mysql}
+    DB_PORT: ${DB_PORT:-3306}
+    DB_DATABASE: ${DB_DATABASE:-skoda}
+    DB_USERNAME: ${DB_USERNAME:-skoda}
+    DB_PASSWORD: ${DB_PASSWORD:-}
+  volumes:
+    - skoda-data:/var/www/html/var
+    # Alternatively to the environment variables:
+    # - ./config.local.php:/var/www/html/config.local.php:ro
+
+services:
+  web:
+    <<: *app
+    ports:
+      - "${WEB_PORT:-8080}:80"
+
+  # Fetches the data every fetch_interval seconds and stores it in the database
+  worker:
+    <<: *app
+    command: ["php", "bin/fetch.php", "--daemon"]
+    user: www-data
+    init: true
+
+  mysql:
+    image: mysql:8.4
+    profiles: ["mysql"]
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-skoda}
+      MYSQL_USER: ${DB_USERNAME:-skoda}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  skoda-data:
+  mysql-data:
